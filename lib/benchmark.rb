@@ -3,6 +3,7 @@ ENV["CONVERTER_ENV"] = "test"
 require 'benchmark'
 require_relative 'converter.rb'
 
+# Benchmarks the time required to run the converter program
 Benchmark.bm do |x|
 	x.report {
 		# puts 'Beginning benchmark...'

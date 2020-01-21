@@ -32,6 +32,7 @@ describe Converter do
                    %w[ACTA OOT MUS], %w[ACTA OOT NUS], %w[ACTA OOT OUR],
                    %w[ACTA MOUNTS]] }
 
+  let(:phone_number_3) {'2233115500'}
 
 	context 'Given a valid phone number 1' do
 		it 'outputs a list of word combinations' do 
@@ -48,5 +49,13 @@ describe Converter do
 			expect(object.get_word_combinations(phone_number_2)).to match_array(result_2)
 		end
 	end
+
+  context 'Given an invalid phone number 3' do
+    it 'raises an runtime error' do 
+      puts 'Phone Number: ' + phone_number_3
+      object = Converter.new
+      expect{object.get_word_combinations(phone_number_3)}.to raise_error(RuntimeError, "The given phone number is invalid. Please try again.")
+    end
+  end
 
 end
