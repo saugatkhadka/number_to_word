@@ -23,12 +23,14 @@ class Converter
 			"9" => ["W", "X", "Y", "Z"]
   	}
   	@dictionary = []
-  	run()
+  	@correct_words = []
   end
 
 
   def get_letter_combinations
+  	# TODO: Phone Number validation
   	@phone_letter = []
+
   	number = @phone_number.split("")
 
   	number.each do |letter|
@@ -36,6 +38,8 @@ class Converter
   	end
   	# p @phone_letter	# This is the letter combination for the given number
   	get_words(@phone_letter)
+
+
 	end
 
 	def get_words(letter_combination)
@@ -74,7 +78,7 @@ class Converter
 		# [ [[],[],[]], [[],[],[]] ]
 		# phone_char_array receives an array of the two or three letter_combination of arrays 
 		# of the letters/chars
-
+		matched_words = []
 		phone_chars_array.each do |phone_chars|
 			# Combines the characters together to form words (illegible too)
 			# p phone_chars
@@ -83,12 +87,29 @@ class Converter
 			# letters.
 			# Mapping the array of letters and joining them gives us the words (illegible or not)
 			possible_words = phone_chars[0].product(*phone_chars[1..-1]).map(&:join)
+
+			possible_words.reject! {|x| x.length < 3}
 			# p possible_words
 
 			# Match with dictionary for correct words
-			matched_words = possible_words & @dictionary
-			p matched_words
+			matched_words << (possible_words & @dictionary)
+			# p matched_words
+			return if matched_words.any?(&:empty?)
 		end
+
+		# p matched_words
+		# TODO:  Need to match the words in correct order?
+		# Combining the words in correct order and form. for 2 and for 3 word combination
+
+		# Adds the product of matched words that form correct words to @correct_words 
+		if matched_words.length == 2
+			@correct_words << matched_words[0].product(matched_words[1])
+		elsif matched_words.length == 3
+			@correct_words << matched_words[0].product(*matched_words[1..-1])
+		end
+
+		# p @correct_words
+
 	end
 
 	def load_dictionary
@@ -96,10 +117,16 @@ class Converter
 		puts "Dictionary is Loaded..."
 	end
 
-	def run
-		load_dictionary()
+
+	def get_word_combinations
+		load_dictionary
+		get_letter_combinations
+
+		# p @correct_words
+
+		return @correct_words
 	end
 end	
 
 convert = Converter.new("6686787825")
-convert.get_letter_combinations
+convert.get_word_combinations
