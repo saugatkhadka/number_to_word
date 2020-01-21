@@ -11,52 +11,95 @@
 class Converter
 
   def initialize(phone_number)
-  	@phone_number = phone_number
+  	@phone_number = phone_number.to_s
   	@digit_to_character = {
-			"2": ["A", "B", "C"],
-			"3": ["D", "E", "F"],
-			"4": ["G", "H", "I"],
-			"5": ["J", "K", "L"],
-			"6": ["M", "N", "O"],
-			"7": ["P", "Q", "R", "S"],
-			"8": ["T", "U", "V"],
-			"9": ["W", "X", "Y", "Z"]
+			"2" => ["A", "B", "C"],
+			"3" => ["D", "E", "F"],
+			"4" => ["G", "H", "I"],
+			"5" => ["J", "K", "L"],
+			"6" => ["M", "N", "O"],
+			"7" => ["P", "Q", "R", "S"],
+			"8" => ["T", "U", "V"],
+			"9" => ["W", "X", "Y", "Z"]
   	}
-
+  	@dictionary = []
+  	run()
   end
 
-  def get_phone_number
-  	# The phone numbers will never contain a 0 or 1. 
 
-  	loop do
-  		# If phone number is set when the class is initialized, do not run the 
-			# input process	
-  		break if @phone_number.strip.empty?
+  def get_letter_combinations
+  	@phone_letter = []
+  	number = @phone_number.split("")
 
-  		# Asking User Input
-  		puts "Please enter a 10 digit phone number. "
-	  # 	puts "(Should not contain digits : 1 or 0)"
-	  # 	print "=> "
-	  # 	phone_number = gets.chomp  # phone_number is a string input
-
-	  # 	# Checking for the given condition: 0 or 1 present or less than 10
-	  # 	if phone_number.include?("0") 
-	  # 		puts "Phone number contains 0" 
-	  # 		next
-	  # 	elsif phone_number.include?("1") 
-	  # 		puts "Phone number contains 1" 
-	  # 		next
-  	# 	elsif phone_number.strip.length < 10
-			# 	puts "The phone number given is shorter than 10 digits! Please input the number again" 
-			# 	next
-			# else
-			# 	@phone_number = phone_number
-  	# 	end
+  	number.each do |letter|
+  		@phone_letter << @digit_to_character[letter]
   	end
-  end
+  	# p @phone_letter	# This is the letter combination for the given number
+  	get_words(@phone_letter)
+	end
 
-	
+	def get_words(letter_combination)
+		# Get the number of word combinations possible
+	 	# Words have to be at least 3 characters.
+
+	 	# 3+7, 4+6, 5+5, 6+4, 7+3, 3+3+4, 3+4+3, 4+3+3
+	 	# Generate all word combinations in these order from the letter comibinations available
+	 	generate_words([letter_combination[0..2], letter_combination[3..9]])
+	 	generate_words([letter_combination[0..3], letter_combination[4..9]])
+	 	generate_words([letter_combination[0..4], letter_combination[5..9]])
+	 	generate_words([letter_combination[0..5], letter_combination[6..9]])
+	 	generate_words([letter_combination[0..6], letter_combination[7..9]])
+
+	 	generate_words([
+	 		letter_combination[0..2],
+ 		 	letter_combination[3..5],
+ 		  letter_combination[6..9]
+ 		])
+	 	generate_words([
+	 		letter_combination[0..2],
+ 		 	letter_combination[3..6],
+ 		  letter_combination[7..9]
+ 		])
+	 	generate_words([
+	 		letter_combination[0..3],
+ 			letter_combination[4..6],
+ 		  letter_combination[7..9]
+ 		])
+
+	end
+
+	def generate_words(phone_chars_array)
+		# p phone_char_array
+		# [ [[],[],[]] , [[],[],[],[],[],[]] ]
+		# [ [[],[],[]], [[],[],[]] ]
+		# phone_char_array receives an array of the two or three letter_combination of arrays 
+		# of the letters/chars
+
+		phone_chars_array.each do |phone_chars|
+			# Combines the characters together to form words (illegible too)
+			# p phone_chars
+
+			# *phone_chars flattens the array and product between the arrays generate array of 
+			# letters.
+			# Mapping the array of letters and joining them gives us the words (illegible or not)
+			possible_words = phone_chars[0].product(*phone_chars[1..-1]).map(&:join)
+			# p possible_words
+
+			# Match with dictionary for correct words
+			matched_words = possible_words & @dictionary
+			p matched_words
+		end
+	end
+
+	def load_dictionary
+		File.open(Dir.pwd + '/data/dictionary.txt').each { |line| @dictionary << line.strip }
+		puts "Dictionary is Loaded..."
+	end
+
+	def run
+		load_dictionary()
+	end
 end	
 
-convert = Converter.new(9860120521)
-convert.get_phone_number
+convert = Converter.new("6686787825")
+convert.get_letter_combinations
