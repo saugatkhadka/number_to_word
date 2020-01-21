@@ -26,6 +26,7 @@ motor, truck
 motor, usual
 noun, struck
 not, opt, puck
+
 2282668687 returns a (long) list with at least these word combinations:
 
 catamounts
@@ -33,5 +34,18 @@ acta, mounts
 act, amounts
 act, contour
 cat, boot, our
+
 The conversion of a 10 digit phone number should be performed within 1000ms.
+
+Please create a public GitHub repo for this project under your own account. Make an initial commit to mark when you start, and commit each step during development. Try to commit at least once per hour to the repo. Doing this will allow us to see the steps you took to come to the solution, and how long it took you to do so.
+
+You solution should contain a library with at least a public method that we can call with a 10 digit number, which returns an array with all results. We will use this method to test a set of random numbers and verify the output.
+
+The complete solution should include documentation and unit tests which should at least include the two provided examples.
+
+You have 8 hours to complete this assignment in Ruby. It can be done in under 4 hours, so take the time to do it in a way that showcases your best work.
+
+We hope you understand why we do this. The best way to see what a footballer is capable of is to see them play during a game. Programming is a team effort as well. Your colleagues will have to read and change your code in the future, and vice versa.
+
+You can use a plain text full English Scrabble dictionary such as this one: Dictionary
 
