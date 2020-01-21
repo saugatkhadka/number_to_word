@@ -10,8 +10,8 @@
 
 class Converter
 
-  def initialize(phone_number)
-  	@phone_number = phone_number.to_s
+  def initialize()
+  	@phone_number =''
   	@digit_to_character = {
 			"2" => ["A", "B", "C"],
 			"3" => ["D", "E", "F"],
@@ -24,9 +24,22 @@ class Converter
   	}
   	@dictionary = []
   	@correct_words = []
+  	@phone_keys = []
   end
 
+	def get_word_combinations(phone_number)
+		@phone_number = phone_number.to_s
+		
+		load_dictionary
+		get_letter_combinations
 
+
+		@correct_words.flatten(1)
+		# p @correct_words
+
+	end
+
+	private
   def get_letter_combinations
   	# TODO: Phone Number validation
   	@phone_letter = []
@@ -98,7 +111,6 @@ class Converter
 		end
 
 		# p matched_words
-		# TODO:  Need to match the words in correct order?
 		# Combining the words in correct order and form. for 2 and for 3 word combination
 
 		# Adds the product of matched words that form correct words to @correct_words 
@@ -108,25 +120,21 @@ class Converter
 			@correct_words << matched_words[0].product(*matched_words[1..-1])
 		end
 
-		# p @correct_words
 
 	end
 
 	def load_dictionary
 		File.open(Dir.pwd + '/data/dictionary.txt').each { |line| @dictionary << line.strip }
-		puts "Dictionary is Loaded..."
+		# puts "Dictionary is Loaded..."
 	end
 
 
-	def get_word_combinations
-		load_dictionary
-		get_letter_combinations
 
-		# p @correct_words
-
-		return @correct_words
-	end
 end	
 
-convert = Converter.new("6686787825")
-convert.get_word_combinations
+
+unless ENV["CONVERTER_ENV"] == "test"
+	convert = Converter.new
+	p convert.get_word_combinations("6686787825")
+end
+
